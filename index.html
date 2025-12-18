@@ -12,15 +12,20 @@
       const FINANCE = "https://edition.cnn.com/markets/fear-and-greed";
       const JT = "https://www.youtube.com/watch?v=TSVHoHyErBQ"; // Rock Your Body
 
-      const now = new Date();
-      const london = new Date(
-        now.toLocaleString("en-GB", { timeZone: "Europe/London" })
-      );
+      // Get Europe/London time parts reliably (no string parsing)
+      const dtf = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/London",
+        weekday: "short",
+        hour: "2-digit",
+        hour12: false,
+      });
 
-      const day = london.getDay(); // 0=Sun
-      const hour = london.getHours();
+      const parts = dtf.formatToParts(new Date());
+      const weekday = parts.find(p => p.type === "weekday")?.value; // e.g. "Thu"
+      const hourStr = parts.find(p => p.type === "hour")?.value;    // e.g. "15"
+      const hour = Number(hourStr);
 
-      const isWeekday = day >= 1 && day <= 5;
+      const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
       const isWorkHours = hour >= 9 && hour < 17;
 
       const target = (isWeekday && isWorkHours) ? FINANCE : JT;
@@ -28,3 +33,4 @@
     </script>
   </body>
 </html>
+
