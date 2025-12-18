@@ -26,7 +26,10 @@
             hour12: false,
           });
 
-          const parts = dtf.formatToParts(new Date());
+          //const parts = dtf.formatToParts(new Date());
+          const fakeDate = new Date("2025-01-16T20:00:00Z"); // Thu 8pm London
+          const parts = dtf.formatToParts(fakeDate);
+
           const weekday = parts.find(p => p.type === "weekday")?.value; // Mon..Sun
           const hour = Number(parts.find(p => p.type === "hour")?.value);
           const minute = Number(parts.find(p => p.type === "minute")?.value);
