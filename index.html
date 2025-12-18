@@ -4,34 +4,53 @@
     <meta charset="utf-8" />
     <title>Redirecting…</title>
     <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
     <p>Redirecting…</p>
+    <pre id="debug" style="white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, monospace;"></pre>
 
     <script>
-      const FINANCE = "https://edition.cnn.com/markets/fear-and-greed";
-      const JT = "https://www.youtube.com/watch?v=TSVHoHyErBQ"; // Rock Your Body
+      (function () {
+        const debugEl = document.getElementById("debug");
 
-      // Get Europe/London time parts reliably (no string parsing)
-      const dtf = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Europe/London",
-        weekday: "short",
-        hour: "2-digit",
-        hour12: false,
-      });
+        try {
+          const FINANCE = "https://edition.cnn.com/markets/fear-and-greed";
+          const JT = "https://www.youtube.com/watch?v=TSVHoHyErBQ"; // Rock Your Body
 
-      const parts = dtf.formatToParts(new Date());
-      const weekday = parts.find(p => p.type === "weekday")?.value; // e.g. "Thu"
-      const hourStr = parts.find(p => p.type === "hour")?.value;    // e.g. "15"
-      const hour = Number(hourStr);
+          const dtf = new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Europe/London",
+            weekday: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          });
 
-      const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
-      const isWorkHours = hour >= 9 && hour < 17;
+          const parts = dtf.formatToParts(new Date());
+          const weekday = parts.find(p => p.type === "weekday")?.value; // Mon..Sun
+          const hour = Number(parts.find(p => p.type === "hour")?.value);
+          const minute = Number(parts.find(p => p.type === "minute")?.value);
 
-      target = (isWeekday && isWorkHours) ? FINANCE : JT;
-      target = FINANCE;
-      window.location.replace(target);
+          const isWeekday = ["Mon","Tue","Wed","Thu","Fri"].includes(weekday);
+          const isWorkHours = hour >= 9 && hour < 17;
+
+          const target = (isWeekday && isWorkHours) ? FINANCE : JT;
+
+          debugEl.textContent =
+            `London time detected: ${weekday} ${String(hour).padStart(2,"0")}:${String(minute).padStart(2,"0")}\n` +
+            `isWeekday: ${isWeekday}\n` +
+            `isWorkHours: ${isWorkHours}\n` +
+            `Redirect target: ${target}\n`;
+
+          // Redirect after a short delay so you can SEE the debug text
+          setTimeout(() => window.location.href = target, 1200);
+
+        } catch (err) {
+          debugEl.textContent = "JS error (this is why it isn't redirecting):\n" + err;
+        }
+      })();
     </script>
   </body>
 </html>
+
 
