@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <p>Redirecting…</p>
+
+    <script>
+      const FINANCE = "https://edition.cnn.com/markets/fear-and-greed";
+      const JT = "https://www.youtube.com/watch?v=TSVHoHyErBQ"; // Rock Your Body
+
+      const now = new Date();
+      const london = new Date(
+        now.toLocaleString("en-GB", { timeZone: "Europe/London" })
+      );
+
+      const day = london.getDay(); // 0=Sun
+      const hour = london.getHours();
+
+      const isWeekday = day >= 1 && day <= 5;
+      const isWorkHours = hour >= 9 && hour < 17;
+
+      const target = (isWeekday && isWorkHours) ? FINANCE : JT;
+      window.location.replace(target);
+    </script>
+  </body>
+</html>
