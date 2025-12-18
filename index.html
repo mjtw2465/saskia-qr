@@ -29,6 +29,7 @@
       const isWorkHours = hour >= 9 && hour < 17;
 
       const target = (isWeekday && isWorkHours) ? FINANCE : JT;
+      target = FINANCE;
       window.location.replace(target);
     </script>
   </body>
